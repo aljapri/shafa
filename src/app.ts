@@ -27,8 +27,8 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-const dbUrl:any = "mongodb://localhost:27017/app";
+const url = process.env.DATABASE_URL;
+const dbUrl:any = url;
 const db = DB.getInstance(dbUrl);
 db.connect();
 
