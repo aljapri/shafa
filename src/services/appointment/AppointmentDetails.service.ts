@@ -19,11 +19,10 @@ export default class AppointmentDetailsFetching implements IAppointmentFetchStra
     // console.log(queryConditions);
     // Base query to filter by medicalFacilityId
     let appointment = await Appointment.findOne(queryConditions);
-    console.log(appointment);
     if(!appointment){
         throw HttpResponse.NotFound("there are no appointmnet");
     }
-    const appointmentDetails = await AppointmentDetails.findOne({appointment:appointment._id});
+    const appointmentDetails = await AppointmentDetails.findOne({appointment:appointment._id}).populate("appointment");
     if(!appointmentDetails){
         throw HttpResponse.NotFound("there are no appointmnet Deails");
     }

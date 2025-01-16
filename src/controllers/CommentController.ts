@@ -1,23 +1,3 @@
-/*
-    public async createAppointment(req: Request|any, res: Response, next: NextFunction) {
-        const { medicalFacilityId,doctorId ,date, time} = req.body;
-        const patientId = req.accountId
-
-        const command = new AppointmentCreation(medicalFacilityId,doctorId,patientId,date,time);
-        const result = await AppointmentCommandInvoker.executeCommand(command);
-        res.status(result.statusCode).json(result);
-    }
-    public async cancelAppointment(req: Request|any, res: Response, next: NextFunction) {
-
-       const role = req.role;
-       const appointmentId = req.params.appointmentId;
-       const id = req.accountId;
-
-        const command = new AppointmentCanciling(appointmentId,id,role);
-        const result = await AppointmentCommandInvoker.executeCommand(command);
-        res.status(result.statusCode).json(result);
-    }
-*/
 
 import { NextFunction, Request, Response } from "express";
 

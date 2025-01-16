@@ -28,6 +28,16 @@ export default class DoctorLoginHandler extends AccountLoginBase implements IAcc
     if(auth.role != "doctor"){
       throw HttpResponse.NotFound('Invalid email or password.');
     }
+    // Validate subscription
+    const subscription = await Subscription.findOne({
+      auth: auth._id,
+      status: 'Active',
+      endDate: { $gt: new Date() },
+    });
+    console.log(subscription);
+    if (!subscription) {
+      throw HttpResponse.Forbidden('Your subscription has expired or is inactive.');
+    }
     // Generate JWT token
     const token = await this.tokenGeneration(auth._id);
     return { token,auth };

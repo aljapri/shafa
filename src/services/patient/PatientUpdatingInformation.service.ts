@@ -26,7 +26,7 @@ export default class UpdateInformationCommand implements IDoctorUpdatingCommand 
       throw HttpResponse.NotFound("patient facility not found.");
     }
     // Prepare the update data, excluding password and email
-
+    console.log("one");
     if (this.firstName) document.firstName = this.firstName;
     if (this.lastName) document.lastName = this.lastName;
     if (this.phone) document.phone = this.phone;
@@ -35,8 +35,7 @@ export default class UpdateInformationCommand implements IDoctorUpdatingCommand 
 
 
     await document.save();
-
+    
     return HttpResponse.Ok(document);
   }
 }
-

@@ -2,25 +2,40 @@ import express, { NextFunction, Request, Response } from "express";
 import AppError from "./utils/appError";
 import DB from "./database/DB";
 import * as dotenv from 'dotenv';
-
-
 import globalErrorHandler from "./controllers/ErrorControllers";
 import medicalFacilityRoutes from "./routes/medicalFacility.route";
 import doctorRoutes from "./routes/doctor.route";
 import patientRoutes from "./routes/patient.route";
+import authRoutes from "./routes/auth.route";
+const cors = require("cors");
+
+// -------------run server----------------------
+process.on('uncaughtException', err => {
+    console.log('UNCAUGHT EXCEPTION! 💥 Shutting down...');
+    console.log(err.name, err.message);
+    process.exit(1);
+  });
+// -------------run server----------------------
+
+require('dotenv').config();
 dotenv.config();
-
 const app = express();
+app.use(cors({
+  origin: '*',  // Allows requests from any domain, you can specify a specific domain as well
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.use(express.json());  // This will automatically parse incoming JSON data into `req.body`
-//mongodb+srv://gamer2mohamad:12er56ui90@cluster0.zvvocvd.mongodb.net/uok-dev
-const db = DB.getInstance('mongodb+srv://gamer2mohamad:12er56ui90@cluster0.zvvocvd.mongodb.net/shafa');
+const dbUrl:any = "mongodb://localhost:27017/app";
+const db = DB.getInstance(dbUrl);
 db.connect();
 
 app.use("/api/v1/medical-facilities",medicalFacilityRoutes);
 app.use("/api/v1/doctors",doctorRoutes);
 app.use("/api/v1/patients",patientRoutes);
-
+app.use("/api/v1/auth",authRoutes);
 
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
     next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
@@ -28,14 +43,36 @@ app.all('*', (req: Request, res: Response, next: NextFunction) => {
 
 
 app.use(globalErrorHandler);
-const port:any =  3000
+const port:any =  process.env.PORT || 3000;
 
-app.listen(port, () => {
-    console.log(port);
+
+
+
+
+
+
+
+
+
+//---------------------- run server
+const server = app.listen(port,()=>{
+    console.log(port)
 })
 
-process.on('SIGINT', () => {
-    db.disconnect(); // Disconnect when the process is terminated
-    process.exit();
-});
+process.on('unhandledRejection', (err:any) => {
+    console.log('UNHANDLED REJECTION! 💥 Shutting down...');
+    console.log(err.name, err.message);
+    server.close(() => {
+      process.exit(1);
+    });
+  });
+  
+  process.on('SIGTERM', () => {
+    console.log('👋 SIGTERM RECEIVED. Shutting down gracefully');
+    server.close(() => {
+      console.log('💥 Process terminated!');
+    });
+  });
+  
+
 

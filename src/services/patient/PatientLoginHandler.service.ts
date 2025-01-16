@@ -8,6 +8,7 @@ import PasswordService from '../password/password.service';
 import JWTService from '../jwt/jwt.service';
 import AccountLoginBase from '../auth/AccountLoaginBase.service';
 import IAccountLogin from '../../types/IAccountLogin';
+import { Patient } from '../../models/Patient.model';
 
 interface LoginInput {
   email: string;
@@ -28,8 +29,9 @@ export default class PatientLoginHandler extends AccountLoginBase implements IAc
     if(auth.role != "patient"){
       throw HttpResponse.NotFound('Invalid email or password.');
     }
+    const account = await Patient.findOne({auth:auth._id}).populate("auth","email ").select("-createdAt -updatedAt ");
     // Generate JWT token
     const token = await this.tokenGeneration(auth._id);
-    return { token,auth };
+    return { token,data:account };
   }
 }

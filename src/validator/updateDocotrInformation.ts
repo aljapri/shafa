@@ -16,16 +16,6 @@ export const updateDoctorValidator = [
     .isLength({ min: 4, max: 50 })
     .withMessage('Last name must be between 4 and 50 characters'),
 
-  check('email')
-    .optional()
-    .isEmail()
-    .withMessage('Invalid email format'),
-
-  check('password')
-    .optional()
-    .isLength({ min: 8 })
-    .withMessage('Password must be at least 8 characters long'),
-
   check('phone')
     .optional()
     .isMobilePhone('any')
@@ -48,17 +38,22 @@ export const updateDoctorValidator = [
 
   check('gender')
     .optional()
-    .isIn(['male', 'female', 'other'])
+    .isIn(['male', 'female'])
     .withMessage('Gender must be one of male, female, or other'),
 
-  check('aboutMe')
+  check('description')
     .optional()
     .isString()
     .withMessage('About Me must be a string')
-    .isLength({ min: 10, max: 500 })
-    .withMessage('About Me must be between 10 and 500 characters'),
+    .isLength({ min: 100 })
+    .withMessage('description must be more than 100'),
 
-
+  check('experience')
+    .optional()
+    .isNumeric()
+    .withMessage('About Me must be a number')
+    .isInt({ min: 1 })
+    .withMessage('experience must be at least 1'),
 
   validatorMiddleware,
 ];

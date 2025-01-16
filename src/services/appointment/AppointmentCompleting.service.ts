@@ -47,7 +47,6 @@ export default class AppointmentCompleting implements IAppointmentCommand {
                 doctor: this.doctorId,
                 status: 'booked',
             }).session(session); // Ensure to run this query in the session
-            console.log(await Appointment.findOne({_id:this.appointmentId}));
             // Log the result of the query
             if (!appointment) {
                 throw HttpResponse.NotFound('Appointment not found or not accessible.');

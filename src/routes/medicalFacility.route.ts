@@ -12,10 +12,11 @@ import { updateEmailValidator } from '../validator/updateEmailValidator';
 import { updateMedicalFacilityValidator } from '../validator/updateMedicalFacility';
 import { updatePasswordValidator } from '../validator/updatePasswordValidator';
 import { updateLocationValidator } from '../validator/updateLocationValidator';
-import { doctorValidator } from '../validator/doctorValidator';
-import { updateDoctorValidator } from '../validator/updateDocotrInformation';
 import { updateWorkScheduleValidator } from '../validator/updateWorkSchedule';
 import { medialFacilityValidator } from '../validator/medicalFacilityValidator';
+import { setPhotoField, upload } from '../middleware/MulterHandler';
+import { locationValidator } from '../validator/locationValidator';
+import { workScheduleValidator } from '../validator/workScheduleValidator';
 
 const medicalFacilityRoutes: Router = express.Router();
 const medicalFacilityController = new MedicalFacilityController();
@@ -27,8 +28,12 @@ const authorization = new Authorize(new JWTService(), MedicalFacility);
 // Define routes
 medicalFacilityRoutes.post(
   '/',
+  upload.single('photo'),
+  setPhotoField,
   signupValidator,
   medialFacilityValidator,
+  locationValidator,
+  workScheduleValidator,
   asyncWrapper( medicalFacilityController.createAccount.bind(medicalFacilityController))
 );
 medicalFacilityRoutes.get(
@@ -59,6 +64,8 @@ medicalFacilityRoutes.patch(
 
 medicalFacilityRoutes.patch(
   '/update-information',
+  upload.single('photo'),
+  setPhotoField,
   updateMedicalFacilityValidator,
   asyncWrapper(medicalFacilityController.updatingInformation.bind(medicalFacilityController))
 );
@@ -68,46 +75,18 @@ medicalFacilityRoutes.patch(
   updatePasswordValidator,
   asyncWrapper(medicalFacilityController.updatingPassword.bind(medicalFacilityController))
 );
+
+
+
 medicalFacilityRoutes.patch(
   '/update-location',
   updateLocationValidator,
   asyncWrapper(medicalFacilityController.updatingLocation.bind(medicalFacilityController))
 );
-
-
-// docotrs
-
-medicalFacilityRoutes.post(
-  '/create-doctor',
-  signupValidator,
-  doctorValidator,
-  asyncWrapper( doctorController.createAccount.bind(doctorController))
-);
-
-
-
 medicalFacilityRoutes.patch(
-  '/doctors/:doctorId/update-email',
-  updateEmailValidator,
-  asyncWrapper(doctorController.updatingEmail.bind(doctorController))
-);
-
-medicalFacilityRoutes.patch(
-  '/doctors/:doctorId/update-password',
-  updatePasswordValidator,
-  asyncWrapper(doctorController.updatingPassword.bind(doctorController))
-);
-
-medicalFacilityRoutes.patch(
-  '/doctors/:doctorId/update-information',
-  updateDoctorValidator,
-  asyncWrapper(doctorController.updatingInformation.bind(doctorController))
-);
-
-medicalFacilityRoutes.patch(
-  '/doctors/:doctorId/update-work-schedule',
+  '/update-work-schedule',
   updateWorkScheduleValidator,
-  asyncWrapper(doctorController.updatingWorkSchedule.bind(doctorController))
+  asyncWrapper(medicalFacilityController.updatingWorkSchedul.bind(medicalFacilityController))
 );
 
 

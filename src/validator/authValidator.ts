@@ -8,7 +8,7 @@ export const signupValidator = [
 
   check('email')
     .notEmpty()
-    .withMessage('Email required')
+    .withMessage('Email is required')
     .isEmail()
     .withMessage('Invalid email address')
     .custom(async (val: string) => {

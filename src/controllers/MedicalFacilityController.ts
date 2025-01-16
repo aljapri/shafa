@@ -9,10 +9,12 @@ import { MedicalFacilityFetching } from "../services/medicalFacility/MedicalFaci
 import { MedicalFacilitiesFetching } from "../services/medicalFacility/MedicalFacilitiesFetching.service";
 import { MedicalFacilityUpdatingCommandInvoker } from "../command/MedicalFacilityUpdatingCommandInvoker";
 import { UpdateInformationCommand } from "../services/medicalFacility/MedicalFacilityUpdatingInformation.service";
-import { UpdateLocationCommand } from "../services/medicalFacility/MedicalFacilityUpdatingLoaction.service";
 import { ShareUpdatingCommandInvoker } from "../command/ShareUpdatingCommandInvoker";
 import { UpdatePasswordCommand } from "../services/shareUpdatingCommand/MedicalFacilityUpdatingPassword.service";
 import { UpdateEmailCommand } from "../services/shareUpdatingCommand/MedicalFacilityUpdatingEmail.service";
+import { MedicalFacility } from "../models/medicalFacility.model";
+import { UpdateWorkScheduleCommand } from "../services/workSchedule/WorkScheduleUpdating.service";
+import { UpdateLocationCommand } from "../services/location/LoactionUpdating.service";
 
 
 export default class MedicalFacilityController {
@@ -33,7 +35,7 @@ export default class MedicalFacilityController {
             HttpResponse.InternalServerError();
         }
         const data = HttpResponse.Created(document);
-        return res.status(data.statusCode).json(document);
+        return res.status(data.statusCode).json(data);
     }
 
     public async login(req: Request, res: Response,next:NextFunction) {
@@ -43,7 +45,7 @@ export default class MedicalFacilityController {
             HttpResponse.InternalServerError();
         }
         const data = HttpResponse.Ok(document);
-        return res.status(data.statusCode).json(document);
+        return res.status(data.statusCode).json(data);
     }
 
     public async fetchMedicalFacility(req: Request, res: Response, next: NextFunction) {
@@ -89,10 +91,10 @@ export default class MedicalFacilityController {
     }
 
     public async updatingInformation(req: Request|any, res: Response, next: NextFunction) {
-        const { name, phone, photo } = req.body;
+        const { name, phone, photo,description } = req.body;
         const accountId = req.accountId
 
-        const command = new UpdateInformationCommand(name, phone, photo, accountId)
+        const command = new UpdateInformationCommand(name, phone, photo, accountId,description)
 
         const result = await MedicalFacilityUpdatingCommandInvoker.executeCommand(command);
 
@@ -102,53 +104,26 @@ export default class MedicalFacilityController {
     public async updatingLocation(req: Request|any, res: Response, next: NextFunction) {
         const { city, address, coordinates, suburb } = req.body;
         const accountId = req.accountId
-
-        const command = new UpdateLocationCommand(city, address, coordinates, accountId, suburb);
-        const result = await MedicalFacilityUpdatingCommandInvoker.executeCommand(command);
-
+        const medicalFacility = await MedicalFacility.findById(accountId);
+        if(!medicalFacility){
+            throw HttpResponse.NotFound("medical Facility Not Found")
+        }
+        const command = new UpdateLocationCommand(city, address, coordinates, medicalFacility.location, suburb);
+        const result = await command.execute();
         res.status(result.statusCode).json(result);
     }
-
-
+    
+    public async updatingWorkSchedul(req: Request|any, res: Response, next: NextFunction) {
+        const { Sunday,Monday, Tuesday, Wednesday,Thursday,Friday,Saturday } = req.body;
+        const accountId = req.accountId
+        const medicalFacility = await MedicalFacility.findById(accountId);
+        if(!medicalFacility){
+            throw HttpResponse.NotFound("medical Facility Not Found")
+        }
+        const command = new UpdateWorkScheduleCommand(Sunday,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,medicalFacility.workSchedule);
+        const result = await command.execute();
+        res.status(result.statusCode).json(result);
+    }
     
 
-
-    // public async createDoctorAccount(req:Request,res:Response,next:NextFunction){
-    //     await this._accountFactory.CreateObject("doctor")?.handle(req,res,next);
-    // }
-
-    // public async fetchAllDocotrs(req:Request,res:Response,next:NextFunction){
-    //     const strategy = new FetchAllDoctorsByMedicalFacilityIdStrategy();
-
-    //     // Create a FetchContext with the strategy
-    //     const fetchContext = new DocotrFetchContext(strategy);
-
-    //     // Use the FetchContext to handle the request
-    //     await fetchContext.handle(req, res, next); 
-    // }
-    // public async fetchDoctorById(req:Request,res:Response,next:NextFunction){
-    //     const strategy = new FetchDoctorByMedicalFacilityAndDoctorIdStrategy();
-
-    //     // Create a FetchContext with the strategy
-    //     const fetchContext = new DocotrFetchContext(strategy);
-
-    //     // Use the FetchContext to handle the request
-    //     await fetchContext.handle(req, res, next); 
-    // }
-    // public async updateDocotrEmail(req:Request,res:Response,next:NextFunction){
-    //     await this._updateEmailFactory.CreateObject("doctorByMedicalFacility")?.handle(req,res,next);
-    // }
-    // public async updateDocotrInformation(req:Request,res:Response,next:NextFunction){
-    //     await this._updateInformationFactory.CreateObject("doctorByMedicalFacility")?.handle(req,res,next);
-    // }
-    // public async updateDocotorPassword(req:Request,res:Response,next:NextFunction){
-    //     await this._updatePasswordFactory.CreateObject("doctorByMedicalFacility")?.handle(req,res,next);
-    // }
-    // public async updateDocotrWorkSchedule(req:Request,res:Response,next:NextFunction){
-    //     const doctorUpdateWorkScheduleByMedicalFacility = new DoctorUpdateWorkSchedule()
-    //     await doctorUpdateWorkScheduleByMedicalFacility.handle(req,res,next);
-    // }
-    // public async handleActivation(req:Request,res:Response,next:NextFunction){
-    //     await this._docotrActivation.execute(req,res,next);
-    // }
 }

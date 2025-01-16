@@ -6,7 +6,6 @@ import { IMedicalFacility } from './medicalFacility.model';
 interface IAppointment extends Document {
   patient: mongoose.Types.ObjectId;
   doctor: mongoose.Types.ObjectId;
-  medicalFacility: mongoose.Types.ObjectId;
   date: Date;
   time: string;
   status: 'booked' | 'canceled' | 'completed' | 'expired';
@@ -16,11 +15,9 @@ interface IAppointment extends Document {
 const appointmentSchema = new Schema<IAppointment>({
   patient: { type: Schema.Types.ObjectId, ref: 'Patient', required: true },
   doctor: { type: Schema.Types.ObjectId, ref: 'Doctor', required: true },
-  medicalFacility: { type: Schema.Types.ObjectId, ref: 'Hospital', required: true },
   date: { type: Date, required: true },
   time: { type: String, required: true },
   status: { type: String, enum: ['booked', 'canceled', 'completed','expired'], required: true,default:"booked" },
-
 },
 {
   timestamps: true, // Automatically add `createdAt` and `updatedAt`

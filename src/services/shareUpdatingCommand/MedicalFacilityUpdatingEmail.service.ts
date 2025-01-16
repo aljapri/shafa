@@ -25,7 +25,7 @@ export class UpdateEmailCommand implements IShareUpdatingCommand {
 
     auth.email = this.newEmail;
     await auth.save();
-
+    
     return HttpResponse.Ok(auth);
   }
 }

@@ -6,25 +6,28 @@ import JWTService from '../services/jwt/jwt.service';
 import { restrictTo } from '../utils/restrictTo';
 import { Patient } from '../models/Patient.model';
 import PatientController from '../controllers/PatientController';
-import AppointmentController from '../controllers/AppointmentController';
 import { patientValidator } from '../validator/patientValidator';
 import { loginValidator, signupValidator } from '../validator/authValidator';
 import { updateEmailValidator } from '../validator/updateEmailValidator';
-import { updateDoctorValidator } from '../validator/updateDocotrInformation';
 import { updatePasswordValidator } from '../validator/updatePasswordValidator';
 import appointmentRoutes from './appointment.route';
-import { Appointment } from '../models/Appointment.model';
-import commentRoutes from './comment.route';
+
+import { setPhotoField, upload } from '../middleware/MulterHandler';
+import { updatePatientValidator } from '../validator/updatePatientValidator';
+import ratingRoutes from './rating.route';
 
 const patientRoutes: Router = express.Router({ mergeParams: true });
 
 // Authorization middleware setup
 const authorization = new Authorize(new JWTService(), Patient);
 const patientController = new PatientController();
-const appointmentController = new AppointmentController();
+patientRoutes.use("/appointmnets",authorization.authorize,appointmentRoutes)
+patientRoutes.use("/ratings",authorization.authorize,ratingRoutes)
 // Define routes
 patientRoutes.post(
   '/',
+  upload.single('photo'),
+  setPhotoField,
   signupValidator,
   patientValidator,
   asyncWrapper( patientController.createAccount.bind(patientController))
@@ -49,7 +52,9 @@ patientRoutes.patch(
 
 patientRoutes.patch(
   '/update-information',
-  updateDoctorValidator,
+  upload.single('photo'),
+  setPhotoField,
+  updatePatientValidator,
   asyncWrapper(patientController.updatingInformation.bind(patientController))
 );
 
@@ -62,6 +67,6 @@ patientRoutes.patch(
 
 // ---------------------------------------- appointmnets --------------------------------------------------
 
-patientRoutes.use("/appointmnets",appointmentRoutes)
+
 
 export default patientRoutes;

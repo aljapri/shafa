@@ -12,9 +12,8 @@ export class MedicalFacilityFetchContext {
   public async handle(req: Request | any, res: Response): Promise<void> {
     
       const medicalFacility = await this.strategy.fetch(req);
-
       if (!medicalFacility || medicalFacility.length === 0) {
-        return HttpResponse.NotFound('There are no doctors.');
+        throw HttpResponse.NotFound('There are no doctors.');
       }
 
       const data = HttpResponse.Ok(medicalFacility);

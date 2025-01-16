@@ -8,10 +8,12 @@ export default class MedicalFacilityService {
     body: any,
     authId: mongoose.Types.ObjectId,
     locationId: mongoose.Types.ObjectId,
-    session: ClientSession
+    workScheduleId:mongoose.Types.ObjectId,
+    session: ClientSession,
+    
   ) {
     
-      const { name, phone, medicalFacilityType,photo } = body;
+      const { name, phone, medicalFacilityType,photo,description } = body;
 
       const medicalFacility = await MedicalFacility.create(
         [
@@ -21,7 +23,9 @@ export default class MedicalFacilityService {
             photo,
             location:locationId,
             medicalFacilityType,
+            workSchedule:workScheduleId,
             auth:authId,
+            description,
             isActive: true,
           },
         ],

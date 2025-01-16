@@ -7,6 +7,6 @@ export const MedicalFacilitySearchQuery = (search: string): FilterQuery<typeof D
   return {
     $or: [
       { name: { $in: searchTerms } }
-    ],
+        ],
   };
 };

@@ -2,6 +2,7 @@ import { check } from 'express-validator';
 import validatorMiddleware from '../middleware/validator.middleware';
 
 export const patientValidator = [
+  // First Name Validation
   check('firstName')
     .notEmpty()
     .withMessage('First name is required')
@@ -10,6 +11,7 @@ export const patientValidator = [
     .isLength({ min: 2, max: 50 })
     .withMessage('First name must be between 2 and 50 characters'),
 
+  // Last Name Validation
   check('lastName')
     .notEmpty()
     .withMessage('Last name is required')
@@ -18,29 +20,17 @@ export const patientValidator = [
     .isLength({ min: 2, max: 50 })
     .withMessage('Last name must be between 2 and 50 characters'),
 
-  check('email')
-    .notEmpty()
-    .withMessage('Email is required')
-    .isEmail()
-    .withMessage('Invalid email format'),
-
-  check('password')
-    .notEmpty()
-    .withMessage('Password is required')
-    .isLength({ min: 8 })
-    .withMessage('Password must be at least 8 characters long'),
-
+  // Phone Number Validation
   check('phone')
     .notEmpty()
-    .withMessage('Phone number is required')
-    .matches(/^\+\d{10,15}$/)
-    .withMessage('Phone number must be in the format +1234567890'),
+    .withMessage('Phone number is required'),
 
-  check('photo')
-    .notEmpty()
-    .withMessage('Photo URL is required')
-    .isURL()
-    .withMessage('Photo must be a valid URL'),
+  // Photo Validation (Handle via Multer for file uploads)
+  // check('phone')
+  //   .notEmpty()
+  //   .withMessage('Phone number is required')
+  //   .isMobilePhone('any')
+  //   .withMessage('Invalid phone number format'),
 
   validatorMiddleware,
 ];

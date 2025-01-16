@@ -8,17 +8,19 @@ export class UpdateInformationCommand implements IMedicalFacilityUpdatingCommand
   private phone: string;
   private photo: string;
   private accountId: mongoose.Types.ObjectId;
-
+  private description:string;
   constructor(
     name: string,
     phone: string,
     photo: string,
-    accountId: mongoose.Types.ObjectId
+    accountId: mongoose.Types.ObjectId,
+    description:string
   ) {
     this.name = name;
     this.phone = phone;
     this.photo = photo;
     this.accountId = accountId;
+    this.description = description;
   }
 
   public async execute(): Promise<any> {
@@ -30,6 +32,7 @@ export class UpdateInformationCommand implements IMedicalFacilityUpdatingCommand
     if (this.name) document.name = this.name;
     if (this.phone) document.phone = this.phone;
     if (this.photo) document.photo = this.photo;
+    if(this.description) document.description = this.description;
 
     await document.save();
 

@@ -2,12 +2,12 @@ import AppError from "./appError";
 
 class HttpResponse<T> {
     statusCode: number;
-    statusMessage: string;
+    status: string;
     data?: T;
 
-    constructor(statusCode: number, statusMessage: string, data?: T) {
+    constructor(statusCode: number, status: string, data?: T) {
         this.statusCode = statusCode;
-        this.statusMessage = statusMessage;
+        this.status = status;
         this.data = data;
     }
 

@@ -9,11 +9,11 @@ export default class DoctorCreationService {
   public async create(
     body: any,
     authId: mongoose.Types.ObjectId,
-    medicalFacilityId:mongoose.Types.ObjectId,
     workScheduleId: mongoose.Types.ObjectId,
+    locationId:mongoose.Types.ObjectId,
     session: ClientSession
   ) {
-      const { firstName, lastName, phone, photo, gender, specialization, maxPatients, aboutMe } = body;
+      const { firstName, lastName, phone, photo, gender, specialization, maxPatients, description,experience } = body;
 
       const doctor = await Doctor.create(
         [
@@ -27,8 +27,9 @@ export default class DoctorCreationService {
             specialization,
             workSchedule:workScheduleId,
             maxPatients,
-            aboutMe,
-            medicalFacility:medicalFacilityId
+            description,
+            experience,
+            location:locationId,
           },
         ],
         { session }

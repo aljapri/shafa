@@ -1,50 +1,50 @@
 import { Schema, model } from 'mongoose';
 
 interface IWorkSchedule {
-  Sunday: {startTime:string,endTime:string,isAvailable:boolean};
-  Monday: {startTime:string,endTime:string,isAvailable:boolean};
-  Tuesday: {startTime:string,endTime:string,isAvailable:boolean};
-  Wednesday: {startTime:string,endTime:string,isAvailable:boolean};
-  Thursday: {startTime:string,endTime:string,isAvailable:boolean};
-  Friday: {startTime:string,endTime:string,isAvailable:boolean};
-  Saturday: {startTime:string,endTime:string,isAvailable:boolean};
+  sunday: {startTime:string,endTime:string,isAvailable:boolean};
+  monday: {startTime:string,endTime:string,isAvailable:boolean};
+  tuesday: {startTime:string,endTime:string,isAvailable:boolean};
+  wednesday: {startTime:string,endTime:string,isAvailable:boolean};
+  thursday: {startTime:string,endTime:string,isAvailable:boolean};
+  friday: {startTime:string,endTime:string,isAvailable:boolean};
+  saturday: {startTime:string,endTime:string,isAvailable:boolean};
 
 
 }
 
 const workScheduleSchema = new Schema<IWorkSchedule>({
-  Sunday: { 
+  sunday: { 
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
     isAvailable: { type: Boolean, required: true, default: false },
   },
-  Monday: { 
+  monday: { 
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
     isAvailable: { type: Boolean, required: true, default: false },
   },
-  Tuesday: { 
+  tuesday: { 
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
     isAvailable: { type: Boolean, required: true, default: false },
   },
-  Wednesday: { 
+  wednesday: { 
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
     isAvailable: { type: Boolean, required: true, default: false },
   },
-  Thursday: { 
+  thursday: { 
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
     isAvailable: { type: Boolean, required: true, default: false },
   },
 
-  Friday: { 
+  friday: { 
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
     isAvailable: { type: Boolean, required: true, default: false },
   },
-  Saturday: { 
+  saturday: { 
     startTime: { type: String, required: true },
     endTime: { type: String, required: true },
     isAvailable: { type: Boolean, required: true, default: false },
@@ -58,27 +58,3 @@ const workScheduleSchema = new Schema<IWorkSchedule>({
 const WorkSchedule = model<IWorkSchedule>('WorkSchedule', workScheduleSchema);
 
 export { WorkSchedule, IWorkSchedule };
-
-/**
- 
-import { Schema, model } from 'mongoose';
-
-interface IWorkSchedule {
-  day: string;
-  startTime: string;
-  endTime: string;
-  isAvailable: boolean;
-}
-
-const workScheduleSchema = new Schema<IWorkSchedule>({
-  day: { type: String, required: true },
-  startTime: { type: String, required: true },
-  endTime: { type: String, required: true },
-  isAvailable: { type: Boolean, required: true, default: false }
-});
-
-const WorkSchedule = model<IWorkSchedule>('WorkSchedule', workScheduleSchema);
-
-export { WorkSchedule, IWorkSchedule };
-
- */

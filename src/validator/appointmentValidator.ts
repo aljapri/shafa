@@ -2,12 +2,6 @@ import { check } from 'express-validator';
 import validatorMiddleware from '../middleware/validator.middleware';
 
 export const createAppointmentValidator = [
-  check('medicalFacilityId')
-    .notEmpty()
-    .withMessage('Medical Facility ID is required')
-    .isMongoId()
-    .withMessage('Medical Facility ID must be a valid MongoDB ObjectId'),
-
   check('doctorId')
     .notEmpty()
     .withMessage('Doctor ID is required')
@@ -18,7 +12,16 @@ export const createAppointmentValidator = [
     .notEmpty()
     .withMessage('Date is required')
     .isISO8601()
-    .withMessage('Date must be in valid ISO 8601 format'),
+    .withMessage('Date must be in valid ISO 8601 format')
+    .custom((value) => {
+      const currentDate = new Date();
+      const appointmentDate = new Date(value);
+      // If the appointment date is before today, throw an error
+      if (appointmentDate < currentDate) {
+        throw new Error('Appointment date must be today or in the future');
+      }
+      return true;
+    }),
 
   check('time')
     .notEmpty()

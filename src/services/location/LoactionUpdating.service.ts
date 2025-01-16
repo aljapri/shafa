@@ -7,31 +7,27 @@ import { IMedicalFacilityUpdatingCommand } from "../../types/IMedicalFacilityUpd
 export class UpdateLocationCommand implements IMedicalFacilityUpdatingCommand {
   private city: string;
   private address: string;
-  private coordinates: string;
-  private accountId: mongoose.Types.ObjectId;
+  private coordinates: [number,number];
+  private locationId: mongoose.Types.ObjectId;
   private suburb?: string;
 
   constructor(
     city: string,
     address: string,
-    coordinates: string,
-    accountId: mongoose.Types.ObjectId,
+    coordinates: [number,number],
+    locationId: mongoose.Types.ObjectId,
     suburb?: string
   ) {
     this.city = city;
     this.address = address;
     this.coordinates = coordinates;
-    this.accountId = accountId;
+    this.locationId = locationId;
     this.suburb = suburb;
   }
 
   public async execute(): Promise<any> {
-    const document = await MedicalFacility.findById(this.accountId);
-    if (!document) {
-      return HttpResponse.NotFound("Medical facility not found.");
-    }
 
-    const location = await Location.findById(document.location);
+    const location = await Location.findById(this.locationId);
     if (!location) {
       return HttpResponse.NotFound("Location not found.");
     }

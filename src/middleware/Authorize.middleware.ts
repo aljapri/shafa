@@ -7,6 +7,7 @@ import { MedicalFacility } from '../models/medicalFacility.model';
 import { Auth } from '../models/Auth.model';
 import IAuthorize from '../types/IAuthorize';
 import IJWT from '../services/jwt/IJW';
+import { Doctor } from '../models/Doctor.model';
 
 class Authorize implements IAuthorize {
   private readonly _jwtService: IJWT;
@@ -34,8 +35,8 @@ class Authorize implements IAuthorize {
       if (!auth) {
         return next(HttpResponse.Unauthorized('Invalid or expired token.'));
       }
-      
       const account = await this._find.findOne({auth:auth._id});
+
       if(!account){
         return next(HttpResponse.Unauthorized('Invalid or expired token.'));
       }

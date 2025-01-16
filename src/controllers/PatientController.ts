@@ -66,7 +66,7 @@ export default class PatientController {
         const { firstName, lastName ,phone, photo } = req.body;
         const accountId = req.accountId
         // UpdateInformationCommand
-        const command = new UpdateInformationCommand(firstName,lastName,photo,phone,accountId);
+        const command = new UpdateInformationCommand(firstName,lastName,phone,photo,accountId);
         const result = await PatientUpdatingCommandInvoker.executeCommand(command);
         res.status(result.statusCode).json(result);
     }

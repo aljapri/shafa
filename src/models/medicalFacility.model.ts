@@ -5,8 +5,10 @@ export interface IMedicalFacility extends Document {
   phone: string;
   photo:string
   location: mongoose.Types.ObjectId; // Reference to the Location model
-  medicalFacilityType: 'hospital' | 'clinic'; // Strictly type medicalFacilityType
+  medicalFacilityType: 'hospital' | 'clinic' | 'dispensary' | 'Dentallaboratories' | 'NursingClinic'; // Strictly type medicalFacilityType
   auth: mongoose.Types.ObjectId; // Reference to the Auth model
+  description:string;
+  workSchedule:mongoose.Types.ObjectId;
 }
 
 const medicalFacilitySchema: Schema<IMedicalFacility> = new Schema(
@@ -17,9 +19,11 @@ const medicalFacilitySchema: Schema<IMedicalFacility> = new Schema(
     location: { type: Schema.Types.ObjectId, ref: 'Location', required: true },
     medicalFacilityType: {
       type: String,
-      enum: ['hospital', 'clinic'], // Restrict values to 'hospital' or 'clinic'
+      enum: ['hospital','pharmacy','dispensary','Dentallaboratories','NursingClinic'], // Restrict values to 'hospital' or 'clinic'
       required: true,
     },
+    description:{type:String,required:true},
+    workSchedule: { type: Schema.Types.ObjectId, ref: 'WorkSchedule' },
     auth: { type: Schema.Types.ObjectId, ref: 'Auth', required: true }, // Reference to Auth model
   },
   { timestamps: true } // Automatically manage `createdAt` and `updatedAt` fields

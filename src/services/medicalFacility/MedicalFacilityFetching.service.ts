@@ -6,6 +6,13 @@ import { IMedicalFacilityFetchStrategy } from '../../types/IMedicalFacilityFetch
 export class MedicalFacilityFetching implements IMedicalFacilityFetchStrategy {
   async fetch(req: Request|any): Promise<any> {
     const medicalFacilityId = req.params.medicalFacilityId
-    return await MedicalFacility.findById(medicalFacilityId);
+    return await MedicalFacility.findById(medicalFacilityId).populate({
+      path: "auth",
+      select: "email",
+    }).populate({
+      path:"location",
+    }).populate({
+      path:"workSchedule"
+    })
   }
 }

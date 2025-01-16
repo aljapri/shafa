@@ -14,7 +14,7 @@ const subscriptionSchema: Schema<ISubscription> = new Schema(
   {
     auth: { 
       type: Schema.Types.ObjectId, 
-      ref: 'MedicalFacility', 
+      ref: 'Auth', 
       required: true 
     },
     subscriptionPlan: { 

@@ -28,6 +28,7 @@ export default class MedicalFacilityLoginHandler extends AccountLoginBase implem
     if(auth.role != "medicalFacility"){
       throw HttpResponse.NotFound('Invalid email or password.');
     }
+    console.log(auth);
     // Validate subscription
     const subscription = await Subscription.findOne({
       auth: auth._id,

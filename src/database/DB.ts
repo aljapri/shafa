@@ -17,12 +17,10 @@ class DB {
 
     public async connect(): Promise<void> {
         try {
-            await mongoose.connect(this.url, {
-                autoCreate: true, // Automatically create collections if they don't exist
-            });
+            await mongoose.connect(this.url);
             console.log('MongoDB connected');
         } catch (error) {
-            console.error('MongoDB connection error:', error);
+            // console.error('MongoDB connection error:', error);
             process.exit(1);
         }
     }
@@ -32,7 +30,7 @@ class DB {
             await mongoose.disconnect();
             console.log('MongoDB disconnected');
         } catch (error) {
-            console.error('Error disconnecting from MongoDB:', error);
+            // console.error('Error disconnecting from MongoDB:', error);
         }
     }
 }

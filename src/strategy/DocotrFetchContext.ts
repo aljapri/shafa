@@ -13,7 +13,7 @@ export class DocotrFetchContext {
     try {
       const doctors = await this.strategy.fetch(req);
 
-      if (!doctors || doctors.length === 0) {
+      if (!doctors) {
         return next(HttpResponse.NotFound('There are no doctors.'));
       }
 

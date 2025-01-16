@@ -16,7 +16,6 @@ export default abstract class AccountCreationBase {
     if (existingAuth) {
       throw HttpResponse.NotFound("Email is already taken.");
     }
-
     const hashedPassword = await this.passwordService.hashPassword(password);
     const auth = await Auth.create([{ email, password: hashedPassword,role:role }], { session });
     return auth[0]; // Assuming create returns an array with the created record
@@ -32,7 +31,7 @@ export default abstract class AccountCreationBase {
       return result;
     } catch (error) {
       await session.abortTransaction();
-      throw HttpResponse.InternalServerError();
+      throw error;
     } finally {
       session.endSession();
     }
