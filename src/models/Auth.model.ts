@@ -4,7 +4,7 @@ interface IAuth extends Document {
     email: string;
     password: string;
     passwordChangedAt?: Date;
-    role:"admin" | "patinet" | "docotr" | "medicalFacility";
+    role:"admin" | "patient" | "docotr" | "medicalFacility";
     isActive:boolean;
   }
   

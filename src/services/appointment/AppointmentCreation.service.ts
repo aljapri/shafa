@@ -39,7 +39,6 @@ class AppointmentCreation implements IAppointmentCommand {
     if (!patient) {
       throw HttpResponse.NotFound('Patient not found.');
     }
-
     // Validate doctor and medical facility
     const doctor:any = await Doctor.findOne({ _id: this.doctorId }).populate({
       path: 'workSchedule',
@@ -72,7 +71,7 @@ class AppointmentCreation implements IAppointmentCommand {
 
     const appointmentDate = new Date(this.date);
     appointmentDate.setHours(appointmentHour, appointmentMinute, 0, 0);
-
+    console.log(endHour)
     if (appointmentDate < startOfDay || appointmentDate > endOfDay) {
       throw HttpResponse.Conflict('The selected time is outside the doctor\'s working hours.');
     }
@@ -89,6 +88,7 @@ class AppointmentCreation implements IAppointmentCommand {
       throw HttpResponse.Conflict('The doctor is already booked for the selected time.');
     }
 
+    
     // Create the appointment
     const appointment = await Appointment.create({
       patient: this.patientId,

@@ -10,9 +10,6 @@ export class AppointmentFetchContext {
   public async handle(req: Request | any, res: Response, next: NextFunction): Promise<void> {
     try {
       const appointment = await this.strategy.fetch(req);
-      if (!appointment || appointment.length === 0) {
-        return next(HttpResponse.NotFound('There are no appointment.'));
-      }
 
       const data = HttpResponse.Ok(appointment);
       res.status(data.statusCode).json(data);

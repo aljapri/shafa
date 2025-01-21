@@ -50,6 +50,7 @@ export default class PatientController {
 
     public async updatingPassword(req: Request|any, res: Response, next: NextFunction) {
         const { currentPassword, newPassword } = req.body;
+        console.log(currentPassword,newPassword)
         const authId = req.authId
 
         const command = new UpdatePasswordCommand(

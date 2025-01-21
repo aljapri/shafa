@@ -10,7 +10,7 @@ import { patientValidator } from '../validator/patientValidator';
 import { loginValidator, signupValidator } from '../validator/authValidator';
 import { updateEmailValidator } from '../validator/updateEmailValidator';
 import { updatePasswordValidator } from '../validator/updatePasswordValidator';
-import appointmentRoutes from './appointment.route';
+import appointmentRoutes from './appointmentByOwner.route';
 
 import { setPhotoField, upload } from '../middleware/MulterHandler';
 import { updatePatientValidator } from '../validator/updatePatientValidator';
@@ -26,8 +26,6 @@ patientRoutes.use("/ratings",authorization.authorize,ratingRoutes)
 // Define routes
 patientRoutes.post(
   '/',
-  upload.single('photo'),
-  setPhotoField,
   signupValidator,
   patientValidator,
   asyncWrapper( patientController.createAccount.bind(patientController))

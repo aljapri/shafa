@@ -14,6 +14,7 @@ export default class AuthController {
 
         const command = new ValidToken(new JWTService(),req.headers.authorization || "");
         const result = await AuthCommandInvoker.executeCommand(command);
+        console.log(result);
         res.status(result.statusCode).json(result);
 
     }

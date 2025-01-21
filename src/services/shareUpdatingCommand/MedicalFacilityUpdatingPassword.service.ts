@@ -24,13 +24,13 @@ export class UpdatePasswordCommand implements IShareUpdatingCommand {
   }
 
   public async execute(): Promise<any> {
-    
+    console.log("hello")
     const auth = await Auth.findById(this.authId);
     if (!auth) {
       throw HttpResponse.NotFound("account not found.");
     }
     
-
+    console.log(auth)
     const isPasswordValid = await this.passwordService.comparePasswords(
       this.currentPassword,
       auth.password

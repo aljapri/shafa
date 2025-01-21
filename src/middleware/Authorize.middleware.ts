@@ -24,7 +24,6 @@ class Authorize implements IAuthorize {
     if (!token) {
       return next(HttpResponse.Unauthorized('Invalid or expired token.'));
     }
-
     try {
       // Verify the token using JWTService
       const decoded = await this._jwtService.verifyToken(token); // Use JWTService's verify method

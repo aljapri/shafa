@@ -24,6 +24,8 @@ export const patientValidator = [
   check('phone')
     .notEmpty()
     .withMessage('Phone number is required'),
+  check("photo").notEmpty()
+    .withMessage("photo is required"),
 
   // Photo Validation (Handle via Multer for file uploads)
   // check('phone')

@@ -12,11 +12,6 @@ export class DocotrFetchContext {
   public async handle(req: Request | any, res: Response, next: NextFunction): Promise<void> {
     try {
       const doctors = await this.strategy.fetch(req);
-
-      if (!doctors) {
-        return next(HttpResponse.NotFound('There are no doctors.'));
-      }
-
       const data = HttpResponse.Ok(doctors);
       res.status(data.statusCode).json(data);
     } catch (error) {

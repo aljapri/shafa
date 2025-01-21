@@ -1,21 +1,23 @@
 import { Request } from 'express';
-import { Doctor } from '../../models/Doctor.model';
-import APIFeatures from '../../utils/ApiFeatures';
 import { MedicalFacility } from '../../models/medicalFacility.model';
 import { IMedicalFacilityFetchStrategy } from '../../types/IMedicalFacilityFetchStrategy';
 import { BaseFetchStrategy } from '../../utils/BaseFetchStrategy';
 import { MedicalFacilitySearchQuery } from '../../utils/MedicalFacilitySearchQuery';
+
 export class MedicalFacilitiesFetching extends BaseFetchStrategy implements IMedicalFacilityFetchStrategy {
   async fetch(req: Request | any): Promise<any> {
-    const { random, limit, search, medicalFacilityType } = req.query;
+    const { random, search, medicalFacilityType, excludeMedicalFacilityType, city } = req.query;
 
     if (random) {
       // If 'random' is set in the query, fetch a random sample of medical facilities
-      const randomLimit = parseInt(limit) || 10; // Default to 1 random facility
-      console.log(limit);
+      const randomLimit = parseInt(req.query.limit) || 10; // Default to 10 random facilities
       return await MedicalFacility.aggregate([
         {
-          $match: medicalFacilityType ? { medicalFacilityType } : {}, // Filter by medicalFacilityType if provided
+          $match: {
+            ...(medicalFacilityType ? { medicalFacilityType } : {}), // Filter by medicalFacilityType if provided
+            ...(excludeMedicalFacilityType ? { medicalFacilityType: { $ne: excludeMedicalFacilityType } } : {}), // Exclude medicalFacilityType if provided
+            ...(city ? { 'location.city': new RegExp(city, 'i') } : {}), // Filter by city if provided
+          },
         },
         { $sample: { size: randomLimit } }, // Random sampling
         {
@@ -23,7 +25,7 @@ export class MedicalFacilitiesFetching extends BaseFetchStrategy implements IMed
             from: 'locations',
             localField: 'location',
             foreignField: '_id',
-            as: 'locationDetails',
+            as: 'location',
           },
         },
         {
@@ -31,7 +33,7 @@ export class MedicalFacilitiesFetching extends BaseFetchStrategy implements IMed
             from: 'workschedules',
             localField: 'workSchedule',
             foreignField: '_id',
-            as: 'workScheduleDetails',
+            as: 'workSchedule',
           },
         },
         {
@@ -41,12 +43,17 @@ export class MedicalFacilitiesFetching extends BaseFetchStrategy implements IMed
         },
       ]);
     } else {
-      // Build search terms including medicalFacilityType if provided
+      // Build search terms including medicalFacilityType, excludeMedicalFacilityType, and city if provided
       const searchTerms = {
         ...MedicalFacilitySearchQuery(search),
         ...(medicalFacilityType ? { medicalFacilityType } : {}), // Add medicalFacilityType to the search query if provided
+        ...(excludeMedicalFacilityType ? { medicalFacilityType: { $ne: excludeMedicalFacilityType } } : {}), // Exclude medicalFacilityType if provided
+        ...(city ? { 'location.city': new RegExp(city, 'i') } : {}), // Filter by city if provided
       };
 
+      // Log the search terms for debugging
+
+      // Start building the query
       let baseQuery = MedicalFacility.find(searchTerms)
         .populate({
           path: 'location',
@@ -57,7 +64,11 @@ export class MedicalFacilitiesFetching extends BaseFetchStrategy implements IMed
         })
         .select('-auth');
 
-      return await this.applyAPIFeatures(baseQuery, req.query);
+      // Use BaseFetchStrategy's applyAPIFeatures method to handle sorting, limiting fields, and pagination
+      const features = this.applyAPIFeatures(baseQuery, req.query);
+      const paginationResult = await features;
+
+      return paginationResult;
     }
   }
 }

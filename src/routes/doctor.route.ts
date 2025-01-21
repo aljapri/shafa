@@ -5,7 +5,7 @@ import Authorize from '../middleware/Authorize.middleware';
 import JWTService from '../services/jwt/jwt.service';
 import DoctorController from '../controllers/DoctorController';
 import { restrictTo } from '../utils/restrictTo';
-import appointmentRoutes from './appointment.route';
+import appointmentRoutes from './appointmentByOwner.route';
 import { doctorValidator } from '../validator/doctorValidator';
 import { updateDoctorValidator } from '../validator/updateDocotrInformation';
 import { updateWorkScheduleValidator } from '../validator/updateWorkSchedule';

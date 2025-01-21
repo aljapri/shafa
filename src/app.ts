@@ -22,14 +22,14 @@ dotenv.config();
 const app = express();
 app.use(cors({
   origin: '*',  // Allows requests from any domain, you can specify a specific domain as well
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
+  methods: ['GET', 'POST', 'PATCH','PUT', 'DELETE'], // Allowed methods
   allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-const url = process.env.DATABASE_URL;
-const dbUrl:any = url;
-const db = DB.getInstance(dbUrl);
+const url:any = process.env.DATABASE_URL;
+const dbUrl:any = "mongodb://localhost:27017/app";
+const db = DB.getInstance(url);
 db.connect();
 
 app.use("/api/v1/medical-facilities",medicalFacilityRoutes);

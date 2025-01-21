@@ -53,14 +53,37 @@ class APIFeatures<T> {
     return this;
   }
 
-  paginate(): this {
+  async paginate(): Promise<{
+    data: T[];
+    totalCount: number;
+    totalPages: number;
+    currentPage: number;
+    hasMore: boolean;
+  }> {
     const page = parseInt(this.queryString.page || '1', 10);
-    const limit = parseInt(this.queryString.limit || '100', 10);
+    const limit = parseInt(this.queryString.limit || '10', 10);
     const skip = (page - 1) * limit;
 
+    // Get the total count of documents matching the query
+    const totalCount = await this.query.model.countDocuments(this.query.getFilter());
+
+    // Apply pagination
     this.query = this.query.skip(skip).limit(limit);
 
-    return this;
+    // Calculate pagination metadata
+    const totalPages = Math.ceil(totalCount / limit);
+    const hasMore = page < totalPages;
+
+    // Execute the query to get the paginated data
+    const data = await this.query.exec();
+
+    return {
+      data,
+      totalCount,
+      totalPages,
+      currentPage: page,
+      hasMore,
+    };
   }
 }
 
